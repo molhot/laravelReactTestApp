@@ -1,0 +1,50 @@
+version: '3.9'
+
+services:
+  backend:
+    build:
+      context: ./Docker/Laravel
+      dockerfile: Dockerfile
+    container_name: appBackend
+    ports:
+      - "8082:80"
+    volumes:
+      - ./backend:/var/www/html
+    networks:
+      - app-network
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./Docker/React
+      dockerfile: Dockerfile
+    container_name: appFrontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+    networks:
+      - app-network
+
+  db:
+    image: mysql:8.0
+    container_name: appMysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: laravel
+      MYSQL_USER: marimo
+      MYSQL_PASSWORD: 1a24c3de
+    ports:
+      - "3306:3306"
+    volumes:
+      - db/db_data:/var/lib/mysql
+    networks:
+      - app-network
+
+volumes:
+  db_data:
+
+networks:
+  app-network:
+    driver: bridge
