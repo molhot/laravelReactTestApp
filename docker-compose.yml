@@ -1,49 +1,10 @@
-version: "3.9"
+version: "3"
 
 services:
-  db:
-    image: mysql:8.0
-    container_name: appMysql
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: laravel
-      MYSQL_USER: marimo
-      MYSQL_PASSWORD: 1a24c3de
-    volumes:
-      - db_data:/var/lib/mysql
+  apatch:
+    build: ./Apache
+    
+  react-app:
+    build: ./appReact
     ports:
-      - "3306:3306"
-
-  backend:
-    build:
-      context: ./apache
-      dockerfile: Dockerfile
-    container_name: appBackend
-    depends_on:
-      - db
-    volumes:
-      - ./laravel:/var/www/html
-    ports:
-      - "8887:80"
-    environment:
-      DB_CONNECTION: mysql
-      DB_HOST: db
-      DB_PORT: 3306
-      DB_DATABASE: laravel
-      DB_USERNAME: marimo
-      DB_PASSWORD: 1a24c3de
-    entrypoint: ["/usr/local/bin/entrypoint.sh"]
-
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    container_name: appFrontend
-    volumes:
-      - ./frontend:/app
-    ports:
-      - "3003:5173"
-
-volumes:
-  db_data:
+      - "8080:80"
